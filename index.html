@@ -8,8 +8,9 @@
 
 <button id="startBtn">▶ Click para comenzar</button>
 
-<video id="video" width="640" style="display:none;">
+<video id="video" width="640" controls style="display:none;">
     <source src="videos/intro.mp4" type="video/mp4">
+    Tu navegador no soporta video.
 </video>
 
 <div id="options" style="display:none;">
@@ -30,7 +31,7 @@
     startBtn.onclick = () => {
         startBtn.style.display = "none";
         video.style.display = "block";
-        video.play(); // ← AQUÍ YA SE PERMITE AUDIO
+        video.play(); // audio permitido después del click
     };
 
     video.onended = () => {
