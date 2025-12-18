@@ -2,13 +2,14 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Decisión</title>
+    <title>Video interactivo</title>
 </head>
 <body>
 
-<video id="video" width="640" autoplay>
+<button id="startBtn">▶ Click para comenzar</button>
+
+<video id="video" width="640" style="display:none;">
     <source src="videos/intro.mp4" type="video/mp4">
-    Tu navegador no soporta video.
 </video>
 
 <div id="options" style="display:none;">
@@ -16,7 +17,6 @@
     <button onclick="choose('NO')">No</button>
 </div>
 
-<!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
     (function () {
@@ -25,25 +25,27 @@
 
     const video = document.getElementById("video");
     const options = document.getElementById("options");
+    const startBtn = document.getElementById("startBtn");
+
+    startBtn.onclick = () => {
+        startBtn.style.display = "none";
+        video.style.display = "block";
+        video.play(); // ← AQUÍ YA SE PERMITE AUDIO
+    };
 
     video.onended = () => {
         options.style.display = "block";
     };
 
     function choose(option) {
-
-        emailjs.send("service_n7hdppq", "template_t2mu3no", {
+        emailjs.send("service_n7hdppq", "template_wilvjop", {
             decision: option,
             pagina: "Inicio",
             fecha: new Date().toLocaleString(),
             to_email: "mati.veliz2003@gmail.com"
         });
 
-        if (option === "SI") {
-            window.location.href = "si.html";
-        } else {
-            window.location.href = "no.html";
-        }
+        window.location.href = option === "SI" ? "si.html" : "no.html";
     }
 </script>
 
