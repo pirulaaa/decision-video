@@ -3,19 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <title>Video interactivo</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+        }
+
+        .video-container {
+            position: relative;
+            width: 640px;
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .play-icon {
+            font-size: 80px;
+            color: white;
+            opacity: 0.9;
+        }
+
+        #options {
+            position: absolute;
+            bottom: -60px;
+            width: 100%;
+            display: none;
+            text-align: center;
+        }
+
+        #options button {
+            margin: 0 10px;
+            padding: 10px 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
-<button id="startBtn">▶ Click para comenzar</button>
+<div class="video-container">
+    <video id="video" controls>
+        <source src="videos/intro.mp4" type="video/mp4">
+        Tu navegador no soporta video.
+    </video>
 
-<video id="video" width="640" controls style="display:none;">
-    <source src="videos/intro.mp4" type="video/mp4">
-    Tu navegador no soporta video.
-</video>
+    <div id="overlay" class="overlay">
+        <div class="play-icon">▶</div>
+    </div>
 
-<div id="options" style="display:none;">
-    <button onclick="choose('SI')">Sí</button>
-    <button onclick="choose('NO')">No</button>
+    <div id="options">
+        <button onclick="choose('SI')">Sí</button>
+        <button onclick="choose('NO')">No</button>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -25,13 +81,12 @@
     })();
 
     const video = document.getElementById("video");
+    const overlay = document.getElementById("overlay");
     const options = document.getElementById("options");
-    const startBtn = document.getElementById("startBtn");
 
-    startBtn.onclick = () => {
-        startBtn.style.display = "none";
-        video.style.display = "block";
-        video.play(); // audio permitido después del click
+    overlay.onclick = () => {
+        overlay.style.display = "none";
+        video.play(); // audio permitido
     };
 
     video.onended = () => {
