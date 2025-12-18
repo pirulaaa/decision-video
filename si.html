@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Elegiste Sí</title>
+</head>
+<body>
+
+<video id="video" width="640" autoplay>
+    <source src="videos/si.mp4" type="video/mp4">
+</video>
+
+<div id="options" style="display:none;">
+    <button onclick="choose('Continuar SI')">Continuar</button>
+    <button onclick="choose('Salir SI')">Salir</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+    (function () {
+        emailjs.init("qQHCYJL8PB-mcY-n0");
+    })();
+
+    const video = document.getElementById("video");
+    const options = document.getElementById("options");
+
+    video.onended = () => {
+        options.style.display = "block";
+    };
+
+    function choose(decision) {
+
+        emailjs.send("service_n7hdppq", "template_t2mu3no", {
+            decision: decision,
+            pagina: "SI",
+            fecha: new Date().toLocaleString(),
+            to_email: "mati.veliz2003@gmail.com"
+        });
+
+        alert("Fin de demo");
+    }
+</script>
+
+</body>
+</html>
