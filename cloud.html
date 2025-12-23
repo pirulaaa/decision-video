@@ -122,19 +122,30 @@ const playOverlay = document.getElementById("playOverlay");
 const options = document.getElementById("options");
 
 /* Música local */
-const music = new Audio("./auido/Start Menu.mp3");
+const music = new Audio("Start_Menu.mp3");
 music.loop = true;
 music.volume = 0.4;
+music.addEventListener("canplaythrough", () => {
+  console.log("🎵 Música cargada correctamente");
+});
+
+music.addEventListener("error", () => {
+  console.error("❌ Error cargando Start_Menu.mp3");
+});
 
 /* Click inicial */
 playOverlay.addEventListener("click", () => {
   playOverlay.style.display = "none";
 
-  video.muted = false;   // 🔊 activar audio
+  video.muted = false;
   video.play();
 
-  music.play();
+  music.currentTime = 0;
+  music.play().catch(err => {
+    console.log("Audio bloqueado:", err);
+  });
 });
+
 
 /* Fin del video */
 video.addEventListener("ended", () => {
@@ -146,7 +157,7 @@ function choose(option) {
   options.style.display = "none";
 
   if (option === 1) {
-    video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_opcion1.mp4";
+    video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_katalina_sobihz.mp4";
   } else {
     video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_opcion2.mp4";
   }
@@ -158,4 +169,3 @@ function choose(option) {
 
 </body>
 </html>
-
