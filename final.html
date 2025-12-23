@@ -21,17 +21,17 @@ body {
 /* VIDEO */
 #videoContainer {
   width: 100vw;
-  height: 100vh;
+  height: 70vh;          /* ← 70% de alto */
+  position: relative;
 }
 
 #player iframe {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 }
-
 /* OVERLAY PLAY */
 #overlay {
-  position: fixed;
+  position: absolute;   /* ← clave */
   inset: 0;
   background: rgba(0,0,0,0.4);
   display: flex;
@@ -39,8 +39,8 @@ body {
   align-items: center;
   cursor: pointer;
   z-index: 10;
-  transition: background 0.3s ease;
 }
+
 
 #overlay:hover {
   background: rgba(0,0,0,0.55);
@@ -69,13 +69,13 @@ body {
 
 /* OPCIONES */
 #options {
-  position: fixed;
-  bottom: 50px;
-  width: 100%;
+  position: relative;   /* ← ya NO fixed */
+  height: 30vh;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 20px;
-  z-index: 5;
+  background: black;
 }
 
 #options button {
@@ -96,12 +96,10 @@ body {
 <body>
 
 <!-- OVERLAY PLAY -->
-<div id="overlay">
-  <div id="playIcon"></div>
-</div>
-
-<!-- VIDEO -->
 <div id="videoContainer">
+  <div id="overlay">
+    <div id="playIcon"></div>
+  </div>
   <div id="player"></div>
 </div>
 
@@ -135,7 +133,7 @@ const story = {
     ]
   },
   duda: {
-    video: "bPVMyd4W9CoWvnKN",
+    video: "bPVMyd4W9Co",
     options: [
       { text: "Volver", next: "intro" }
     ]
@@ -143,15 +141,18 @@ const story = {
 };
 
 /* OVERLAY CLICK */
-document.getElementById("overlay").onclick = () => {
-  if (!started) {
-    started = true;
-    document.getElementById("overlay").classList.add("hidden");
+document.getElementById("overlay").addEventListener("click", () => {
+  if (started || !player) return;
 
-    document.getElementById("bgMusic").play();
-    loadScene(currentScene);
-  }
-};
+  started = true;
+  document.getElementById("overlay").style.display = "none";
+
+  document.getElementById("bgMusic").volume = 0.4;
+  document.getElementById("bgMusic").play();
+
+  loadScene(currentScene);
+});
+
 
 /* YOUTUBE API */
 function onYouTubeIframeAPIReady() {
