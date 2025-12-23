@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Video interactivo</title>
+
+<style>
+  body {
+    margin: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: sans-serif;
+  }
+
+  #videoContainer {
+    position: relative;
+    width: 85%;
+    max-width: 900px;
+  }
+
+  video {
+    width: 100%;
+    display: block;
+    background: black;
+  }
+
+  /* Hover play */
+  #playOverlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(120,120,120,0.25);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+
+  #playOverlay:hover {
+    background: rgba(120,120,120,0.4);
+  }
+
+  #playIcon {
+    font-size: 80px;
+    color: white;
+  }
+
+  /* Opciones */
+  #options {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: white;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+</style>
+</head>
+
+<body>
+
+<div id="videoContainer">
+
+  <video src="https://res.cloudinary.com/djjbo6x3d/video/upload/video_katalina_sobihz.mp4"
+       autoplay
+       muted
+       playsinline>
+</video>
+
+
+  <!-- Overlay play -->
+  <div id="playOverlay">
+    <div id="playIcon">▶</div>
+  </div>
+
+  <!-- Opciones -->
+  <div id="options">
+    <h2>¿Qué decides?</h2>
+    <button onclick="choose(1)">Opción A</button>
+    <button onclick="choose(2)">Opción B</button>
+  </div>
+
+</div>
+
+<!-- 🎮 JS INLINE -->
+<script>
+  const video = document.getElementById("storyVideo");
+  const playOverlay = document.getElementById("playOverlay");
+  const options = document.getElementById("options");
+
+  // Música de fondo (local)
+  const music = new Audio("musica.mp3");
+  music.loop = true;
+  music.volume = 0.4;
+
+  // Click inicial (desbloquea audio)
+  playOverlay.addEventListener("click", () => {
+    playOverlay.style.display = "none";
+    video.play();
+    music.play();
+  });
+
+  // Cuando termina el video
+  video.addEventListener("ended", () => {
+    options.style.display = "flex";
+  });
+
+  // Decisiones
+  function choose(option) {
+    options.style.display = "none";
+
+    if (option === 1) {
+      video.src = "https://res.cloudinary.com/TU_CLOUD_NAME/video/upload/video_opcion1.mp4";
+    } else {
+      video.src = "https://res.cloudinary.com/TU_CLOUD_NAME/video/upload/video_opcion2.mp4";
+    }
+
+    video.load();
+    video.play();
+  }
+</script>
+
+</body>
+</html>
