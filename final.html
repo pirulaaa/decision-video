@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Video Interactivo</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, sans-serif;
+}
+
+body {
+  background: black;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* VIDEO */
+#videoContainer {
+  width: 100vw;
+  height: 100vh;
+}
+
+#player iframe {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* OVERLAY PLAY */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s ease;
+}
+
+#overlay:hover {
+  background: rgba(0,0,0,0.55);
+}
+
+/* PLAY ICON */
+#playIcon {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#playIcon::before {
+  content: "";
+  margin-left: 5px;
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 25px solid black;
+}
+
+/* OPCIONES */
+#options {
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 5;
+}
+
+#options button {
+  padding: 12px 30px;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+}
+
+/* UTIL */
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- OVERLAY PLAY -->
+<div id="overlay">
+  <div id="playIcon"></div>
+</div>
+
+<!-- VIDEO -->
+<div id="videoContainer">
+  <div id="player"></div>
+</div>
+
+<!-- OPCIONES -->
+<div id="options" class="hidden"></div>
+
+<!-- AUDIO LOCAL -->
+<audio id="bgMusic" src="audio.mp3" loop></audio>
+
+<!-- YOUTUBE API -->
+<script src="https://www.youtube.com/iframe_api"></script>
+
+<script>
+let player;
+let started = false;
+let currentScene = "intro";
+
+/* HISTORIA */
+const story = {
+  intro: {
+    video: "lVgorBeg3Mk",
+    options: [
+      { text: "Confiar", next: "confianza" },
+      { text: "Dudar", next: "duda" }
+    ]
+  },
+  confianza: {
+    video: "pcwPAx8mKkQ",
+    options: [
+      { text: "Volver", next: "intro" }
+    ]
+  },
+  duda: {
+    video: "bPVMyd4W9CoWvnKN",
+    options: [
+      { text: "Volver", next: "intro" }
+    ]
+  }
+};
+
+/* OVERLAY CLICK */
+document.getElementById("overlay").onclick = () => {
+  if (!started) {
+    started = true;
+    document.getElementById("overlay").classList.add("hidden");
+
+    document.getElementById("bgMusic").play();
+    loadScene(currentScene);
+  }
+};
+
+/* YOUTUBE API */
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player("player", {
+    width: "100%",
+    height: "100%",
+    playerVars: {
+      autoplay: 1,
+      controls: 0,
+      modestbranding: 1,
+      rel: 0,
+      fs: 0
+    },
+    events: {
+      onStateChange: onPlayerStateChange
+    }
+  });
+}
+
+/* CARGAR ESCENA */
+function loadScene(scene) {
+  currentScene = scene;
+  document.getElementById("options").classList.add("hidden");
+  player.loadVideoById(story[scene].video);
+}
+
+/* FIN VIDEO */
+function onPlayerStateChange(event) {
+  if (event.data === YT.PlayerState.ENDED) {
+    showOptions();
+  }
+}
+
+/* OPCIONES */
+function showOptions() {
+  const optionsDiv = document.getElementById("options");
+  optionsDiv.innerHTML = "";
+
+  story[currentScene].options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+    btn.onclick = () => loadScene(opt.next);
+    optionsDiv.appendChild(btn);
+  });
+
+  optionsDiv.classList.remove("hidden");
+}
+</script>
+
+</body>
+</html>
