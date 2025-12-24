@@ -150,9 +150,9 @@ const options = document.getElementById("options");
 const optionsButtons = document.getElementById("optionsButtons");
 
 /* ========== MÚSICA ========== */
-const music = new Audio("Start_Menu.mp3");
+const music = new Audio("Kismet.mp3");
 music.loop = true;
-music.volume = 0.4;
+music.volume = 0.7;
 
 /* ========== ESCENAS (ÁRBOL REAL) ========== */
 const scenes = {
@@ -240,7 +240,7 @@ function choose(option) {
 
   emailjs.send("service_n7hdppq", "template_wilvjop", {
     decision: option.label,
-    escena: currentScene,
+    pagina: currentScene,
     fecha: new Date().toLocaleString(),
     to_email: "mati.veliz2003@gmail.com"
   }).catch(() => {});
