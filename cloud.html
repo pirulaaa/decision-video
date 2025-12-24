@@ -124,7 +124,16 @@ body {
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+
 <script>
+
+(function () {
+  emailjs.init("qQHCYJL8PB-mcY-n0");
+})();
+
+
 const video = document.getElementById("storyVideo");
 const playOverlay = document.getElementById("playOverlay");
 const options = document.getElementById("options");
@@ -164,6 +173,19 @@ video.addEventListener("ended", () => {
 function choose(option) {
   options.style.display = "none";
 
+  // 📧 ENVIAR CORREO
+  emailjs.send("service_n7hdppq", "template_wilvjop", {
+    decision: option === 1 ? "Opción A" : "Opción B",
+    pagina: "Video interactivo",
+    fecha: new Date().toLocaleString(),
+    to_email: "mati.veliz2003@gmail.com"
+  }).then(() => {
+    console.log("📨 Correo enviado");
+  }).catch(err => {
+    console.error("❌ Error enviando correo", err);
+  });
+
+  // 🎬 CAMBIAR VIDEO
   if (option === 1) {
     video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_katalina_sobihz.mp4";
   } else {
@@ -173,6 +195,8 @@ function choose(option) {
   video.load();
   video.play();
 }
+
+
 </script>
 
 </body>
