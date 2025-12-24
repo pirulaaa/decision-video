@@ -126,78 +126,122 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
-
 <script>
-
+/* ========== EMAILJS ========== */
 (function () {
   emailjs.init("qQHCYJL8PB-mcY-n0");
 })();
 
-
+/* ========== ELEMENTOS ========== */
 const video = document.getElementById("storyVideo");
 const playOverlay = document.getElementById("playOverlay");
 const options = document.getElementById("options");
+const optionsButtons = document.getElementById("optionsButtons");
 
-/* Música local */
+/* ========== MÚSICA ========== */
 const music = new Audio("Start_Menu.mp3");
 music.loop = true;
 music.volume = 0.4;
-music.addEventListener("canplaythrough", () => {
-  console.log("🎵 Música cargada correctamente");
-});
 
-music.addEventListener("error", () => {
-  console.error("❌ Error cargando Start_Menu.mp3");
-});
+/* ========== ESCENAS (ÁRBOL REAL) ========== */
+const scenes = {
+  intro: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/casi_todos_sabesmo_querer_rsz9wq.mp4",
+    options: [
+      { text: "Opción A", next: "a1", label: "A" },
+      { text: "Opción B", next: "b1", label: "B" }
+    ]
+  },
 
-/* Click inicial */
+  a1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/video_katalina_sobihz.mp4",
+    options: [
+      { text: "Opción C", next: "c1", label: "C" },
+      { text: "Opción D", next: "d1", label: "D" }
+    ]
+  },
+
+  b1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/B1.mp4",
+    options: [
+      { text: "Opción E", next: "e1", label: "E" },
+      { text: "Opción F", next: "f1", label: "F" }
+    ]
+  },
+
+  c1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/C1.mp4",
+    options: []
+  },
+
+  d1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/D1.mp4",
+    options: []
+  },
+
+  e1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/E1.mp4",
+    options: []
+  },
+
+  f1: {
+    video: "https://res.cloudinary.com/djjbo6x3d/video/upload/F1.mp4",
+    options: []
+  }
+};
+
+let currentScene = "intro";
+
+/* ========== OVERLAY ========== */
 playOverlay.addEventListener("click", () => {
   playOverlay.style.display = "none";
-
   video.muted = false;
   video.play();
-
-  music.currentTime = 0;
-  music.play().catch(err => {
-    console.log("Audio bloqueado:", err);
-  });
+  music.play().catch(() => {});
 });
 
-
-/* Fin del video */
+/* ========== FIN VIDEO ========== */
 video.addEventListener("ended", () => {
-  options.style.display = "flex";
+  showOptions();
 });
 
-/* Decisiones */
+/* ========== MOSTRAR OPCIONES ========== */
+function showOptions() {
+  optionsButtons.innerHTML = "";
+
+  const scene = scenes[currentScene];
+
+  if (scene.options.length === 0) return;
+
+  scene.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+    btn.onclick = () => choose(opt);
+    optionsButtons.appendChild(btn);
+  });
+
+  options.style.display = "flex";
+}
+
+/* ========== ELEGIR ========== */
 function choose(option) {
   options.style.display = "none";
 
-  // 📧 ENVIAR CORREO
   emailjs.send("service_n7hdppq", "template_wilvjop", {
-    decision: option === 1 ? "Opción A" : "Opción B",
-    pagina: "Video interactivo",
+    decision: option.label,
+    escena: currentScene,
     fecha: new Date().toLocaleString(),
     to_email: "mati.veliz2003@gmail.com"
-  }).then(() => {
-    console.log("📨 Correo enviado");
-  }).catch(err => {
-    console.error("❌ Error enviando correo", err);
-  });
+  }).catch(() => {});
 
-  // 🎬 CAMBIAR VIDEO
-  if (option === 1) {
-    video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_katalina_sobihz.mp4";
-  } else {
-    video.src = "https://res.cloudinary.com/djjbo6x3d/video/upload/video_opcion2.mp4";
-  }
-
+  currentScene = option.next;
+  video.src = scenes[currentScene].video;
   video.load();
   video.play();
 }
-
-
 </script>
+
+
 
 </body>
 </html>
